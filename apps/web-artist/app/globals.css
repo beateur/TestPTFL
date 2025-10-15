@@ -1,0 +1,10 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: radial-gradient(circle at top, #140726 0%, #050307 50%, #000000 100%);
+  color: #f7f5ff;
+}
