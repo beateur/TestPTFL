@@ -25,12 +25,14 @@ import { FiBarChart2, FiLayers, FiLogOut, FiUser } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useAccountContext } from './AccountProvider';
 import { trackEvent } from '../../lib/telemetry';
+import { useRouter } from 'next/navigation';
 
 const MotionBox = motion(Box);
 
 export function DashboardShell() {
   const toast = useToast();
   const { overview, selectedArtist, selectArtist, canCreatePage, isLoading } = useAccountContext();
+  const router = useRouter();
 
   useEffect(() => {
     if (selectedArtist?.limit.state === 'warning') {
@@ -68,11 +70,7 @@ export function DashboardShell() {
       return;
     }
     trackEvent('dashboard.create_page_click', { artistId: selectedArtist?.id });
-    toast({
-      status: 'info',
-      title: 'Bientôt disponible',
-      description: 'La création de pages est en cours d\'implémentation dans le Page Builder.'
-    });
+    router.push('/dashboard/page-builder');
   };
 
   const logout = async () => {
@@ -108,6 +106,9 @@ export function DashboardShell() {
             </Button>
           ))}
         </Stack>
+        <Button mt={8} variant="outline" colorScheme="purple" onClick={() => router.push('/dashboard/page-builder')}>
+          Ouvrir le Page Builder
+        </Button>
         <Button mt={10} variant="ghost" leftIcon={<FiLogOut />} onClick={logout} colorScheme="purple">
           Se déconnecter
         </Button>

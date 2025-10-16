@@ -38,3 +38,5 @@ export interface AccountOverview {
   artists: ArtistSummary[];
 }
 
+export type { PageDefinition, PageSection } from './schemas/page';
+
