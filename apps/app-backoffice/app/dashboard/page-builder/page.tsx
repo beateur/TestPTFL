@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '../../lib/supabase/server';
-import { AccountProvider } from './AccountProvider';
-import { DashboardShell } from './DashboardShell';
+import { createSupabaseServerClient } from '../../../lib/supabase/server';
+import { AccountProvider } from '../AccountProvider';
+import { PageBuilderShell } from './PageBuilderShell';
 
 export const metadata = {
-  title: 'Tableau de bord — Lumina Studio'
+  title: 'Page Builder — Lumina Studio'
 };
 
-export default async function DashboardPage() {
+export default async function PageBuilderPage() {
   const supabase = createSupabaseServerClient();
   const {
     data: { session }
@@ -19,8 +19,7 @@ export default async function DashboardPage() {
 
   return (
     <AccountProvider>
-      <DashboardShell />
+      <PageBuilderShell />
     </AccountProvider>
   );
 }
-
