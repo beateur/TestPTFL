@@ -59,14 +59,6 @@ export class SupabaseAuthService {
       throw new UnauthorizedException('Claims JWT non valides');
     }
 
-    // Check token expiration (exp) and not-before (nbf)
-    const now = Math.floor(Date.now() / 1000);
-    if (typeof payload['exp'] === 'number' && now > payload['exp']) {
-      throw new UnauthorizedException('Token expiré');
-    }
-    if (typeof payload['nbf'] === 'number' && now < payload['nbf']) {
-      throw new UnauthorizedException('Token non encore valide');
-    }
     return {
       id: String(payload['sub'] ?? ''),
       email: typeof payload['email'] === 'string' ? payload['email'] : undefined,

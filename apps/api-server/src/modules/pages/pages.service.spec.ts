@@ -65,4 +65,22 @@ describe('PagesService', () => {
       })
     );
   });
+
+  it('returns fixture pages when database lookup fails', async () => {
+    const prismaMock = {
+      pages: {
+        findMany: jest.fn().mockRejectedValue(new Error('db down'))
+      }
+    } as any;
+
+    const service = new PagesService(prismaMock);
+
+    const pages = await service.listByArtist('artist-lys-astrale', {
+      status: PageStatusDto.Published,
+      includeSections: true
+    });
+
+    expect(pages.length).toBeGreaterThan(0);
+    expect(pages[0]).toHaveProperty('sections');
+  });
 });

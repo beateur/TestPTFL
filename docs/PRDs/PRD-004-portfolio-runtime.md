@@ -71,4 +71,5 @@ The public-facing artist sites currently load a mock configuration and display o
 ## Revision History
 | Date | Version | Author | Notes |
 |------|---------|--------|-------|
-| 2024-05-20 | 1.0 | Platform Team | Initial draft.
+| 2024-05-20 | 1.0 | Platform Team | Initial draft. |
+| 2024-05-21 | 1.1 | Roadmap Agent | Livré : runtime multi-tenant, navigation dynamique et formulaire de contact stub. |

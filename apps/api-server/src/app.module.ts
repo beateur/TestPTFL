@@ -5,6 +5,7 @@ import { LeadsModule } from './modules/leads/leads.module';
 import { ArtistsModule } from './modules/artists/artists.module';
 import { PagesModule } from './modules/pages/pages.module';
 import { PlansModule } from './modules/plans/plans.module';
+import { RuntimeModule } from './modules/runtime/runtime.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 
@@ -16,6 +17,7 @@ import { AccountsModule } from './modules/accounts/accounts.module';
     ArtistsModule,
     PagesModule,
     PlansModule,
+    RuntimeModule,
     AuthModule,
     AccountsModule
   ]

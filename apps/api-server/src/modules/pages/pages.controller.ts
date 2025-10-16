@@ -1,14 +1,24 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { PagesService } from './pages.service';
-import { UpsertPageDto } from './pages.dto';
+import { PageStatusDto, UpsertPageDto } from './pages.dto';
 
 @Controller('artists/:artistId/pages')
 export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 
   @Get()
-  findAll(@Param('artistId') artistId: string) {
-    return this.pagesService.listByArtist(artistId);
+  findAll(
+    @Param('artistId') artistId: string,
+    @Query('status') status?: PageStatusDto,
+    @Query('includeSections') includeSections?: string
+  ) {
+    const normalizedStatus = status && Object.values(PageStatusDto).includes(status)
+      ? status
+      : undefined;
+    return this.pagesService.listByArtist(artistId, {
+      status: normalizedStatus,
+      includeSections: includeSections === 'true'
+    });
   }
 
   @Get(':pageId')
