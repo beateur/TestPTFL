@@ -8,3 +8,47 @@ body {
   background: radial-gradient(circle at top, #140726 0%, #050307 50%, #000000 100%);
   color: #f7f5ff;
 }
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  color: #05050f;
+  border-radius: 999px;
+  text-decoration: none;
+  z-index: 999;
+}
+
+.runtime-footer {
+  background: rgba(5, 5, 15, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 4rem;
+}
+
+.runtime-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}

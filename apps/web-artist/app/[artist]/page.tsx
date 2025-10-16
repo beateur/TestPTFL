@@ -1,23 +1,76 @@
+import { headers } from 'next/headers';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { fetchArtistConfig } from '../../lib/data';
-import { HeroSection } from '../../components/HeroSection';
-import { GallerySection } from '../../components/GallerySection';
+import { fetchPublishedPage, resolveTenant } from '../../lib/data';
+import { SectionRenderer } from '../../components/SectionRenderer';
+import { RuntimePageViewTracker } from '../../components/RuntimePageViewTracker';
 
 interface ArtistPageProps {
   params: { artist: string };
 }
 
-export default async function ArtistPage({ params }: ArtistPageProps) {
-  const artist = await fetchArtistConfig(params.artist);
+async function loadRuntimeContext(artistSlug: string) {
+  const headerList = headers();
+  const host = headerList.get('x-runtime-host') ?? headerList.get('host') ?? `${artistSlug}.portfolio.local`;
+  const runtime = await resolveTenant(host);
 
-  if (!artist) {
-    notFound();
+  if (runtime.artist.slug !== artistSlug) {
+    throw new Error('artist_mismatch');
   }
 
-  return (
-    <main>
-      <HeroSection artist={artist} />
-      <GallerySection artworks={artist.featuredArtworks} />
-    </main>
-  );
+  return { runtime, host };
+}
+
+export async function generateMetadata({ params }: ArtistPageProps): Promise<Metadata> {
+  try {
+    const { runtime } = await loadRuntimeContext(params.artist);
+    const page = await fetchPublishedPage({ artistId: runtime.artist.id, artistSlug: runtime.artist.slug, slugSegments: [] });
+
+    if (!page) {
+      return { title: runtime.artist.displayName };
+    }
+
+    const description = page.seoDescription ?? runtime.artist.seoDescription ?? runtime.artist.tagline;
+
+    return {
+      title: `${page.title} — ${runtime.artist.displayName}`,
+      description,
+      openGraph: {
+        title: `${page.title} — ${runtime.artist.displayName}`,
+        description,
+        url: `https://${runtime.artist.slug}.portfolio.local/`,
+        type: 'website'
+      }
+    };
+  } catch {
+    return { title: 'Portfolio' };
+  }
+}
+
+export default async function ArtistPage({ params }: ArtistPageProps) {
+  try {
+    const { runtime } = await loadRuntimeContext(params.artist);
+    const page = await fetchPublishedPage({ artistId: runtime.artist.id, artistSlug: runtime.artist.slug, slugSegments: [] });
+
+    if (!page) {
+      notFound();
+    }
+
+    return (
+      <>
+        <RuntimePageViewTracker artistId={runtime.artist.id} pageId={page.id} slug={page.slug} />
+        <main id="main">
+          <SectionRenderer
+            sections={page.sections}
+            theme={page.theme}
+            accentColor={runtime.artist.accentColor}
+            contactEnabled={runtime.plan.contactEnabled}
+            artist={{ id: runtime.artist.id, name: runtime.artist.displayName }}
+          />
+        </main>
+      </>
+    );
+  } catch (error) {
+    notFound();
+  }
 }

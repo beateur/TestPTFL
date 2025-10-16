@@ -1,7 +1,24 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested
+} from 'class-validator';
 
-class SectionDto {
+export enum PageStatusDto {
+  Draft = 'draft',
+  Published = 'published'
+}
+
+export class SectionDto {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
   @IsString()
   type!: string;
 
@@ -22,12 +39,48 @@ export class UpsertPageDto {
   @IsNotEmpty()
   slug!: string;
 
+  @IsOptional()
+  @IsString()
+  seoDescription?: string;
+
   @IsBoolean()
   @IsOptional()
   isHidden?: boolean;
+
+  @IsOptional()
+  @IsEnum(PageStatusDto)
+  status?: PageStatusDto;
 
   @ValidateNested({ each: true })
   @Type(() => SectionDto)
   @IsArray()
   sections!: SectionDto[];
+}
+
+export class PatchPageDto {
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  slug?: string;
+
+  @IsOptional()
+  @IsString()
+  seoDescription?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isHidden?: boolean;
+
+  @IsOptional()
+  @IsEnum(PageStatusDto)
+  status?: PageStatusDto;
+
+  @ValidateNested({ each: true })
+  @Type(() => SectionDto)
+  @IsArray()
+  @IsOptional()
+  sections?: SectionDto[];
 }

@@ -2,7 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { styled } from '@stitches/react';
-import type { Artwork } from '../lib/data';
+interface GalleryArtwork {
+  title: string;
+  image?: string;
+}
 
 const Section = styled('section', {
   padding: '4rem clamp(2rem, 6vw, 8rem)',
@@ -35,7 +38,7 @@ const Caption = styled('figcaption', {
 });
 
 interface GallerySectionProps {
-  artworks: Artwork[];
+  artworks: GalleryArtwork[];
 }
 
 export function GallerySection({ artworks }: GallerySectionProps) {
@@ -43,10 +46,33 @@ export function GallerySection({ artworks }: GallerySectionProps) {
     <Section>
       <Grid>
         {artworks.map((artwork, index) => (
-          <Card key={artwork.title} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
-            <div style={{ width: '100%', height: '100%', background: 'rgba(255,255,255,0.05)', display: 'grid', placeItems: 'center' }}>
-              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>Visuel {index + 1}</span>
-            </div>
+          <Card
+            key={artwork.title}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+          >
+            {artwork.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={artwork.image}
+                alt={artwork.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                loading="lazy"
+              />
+            ) : (
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(255,255,255,0.05)',
+                  display: 'grid',
+                  placeItems: 'center'
+                }}
+              >
+                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>Visuel {index + 1}</span>
+              </div>
+            )}
             <Caption>{artwork.title}</Caption>
           </Card>
         ))}

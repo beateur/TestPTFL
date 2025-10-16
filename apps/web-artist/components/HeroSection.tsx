@@ -2,7 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { styled } from '@stitches/react';
-import type { ArtistConfig } from '../lib/data';
+interface HeroSectionData {
+  heading: string;
+  subheading?: string;
+  kicker?: string;
+}
 
 const Wrapper = styled('section', {
   minHeight: '80vh',
@@ -36,19 +40,34 @@ const AccentBar = styled(motion.div, {
 });
 
 interface HeroSectionProps {
-  artist: ArtistConfig;
+  data: HeroSectionData;
+  background: string;
+  accent: string;
 }
 
-export function HeroSection({ artist }: HeroSectionProps) {
+export function HeroSection({ data, background, accent }: HeroSectionProps) {
   return (
-    <Wrapper style={{ ['--hero-background' as string]: artist.theme.background, ['--hero-accent' as string]: artist.theme.accent }}>
+    <Wrapper style={{ ['--hero-background' as string]: background, ['--hero-accent' as string]: accent }}>
       <AccentBar initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.8 }} />
+      {data.kicker ? (
+        <Tagline
+          as={motion.span}
+          style={{ textTransform: 'uppercase', letterSpacing: '0.35em', fontSize: '0.75rem', opacity: 0.65 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          {data.kicker}
+        </Tagline>
+      ) : null}
       <Title initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-        {artist.name}
+        {data.heading}
       </Title>
-      <Tagline initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-        {artist.tagline}
-      </Tagline>
+      {data.subheading ? (
+        <Tagline initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
+          {data.subheading}
+        </Tagline>
+      ) : null}
     </Wrapper>
   );
 }
